@@ -1,0 +1,61 @@
+{
+  "nodes": [
+    {
+      "id": "proxy",
+      "label": "Reverse Proxy",
+      "group": "infra",
+      "description": "Gestisce il traffico HTTPS e il routing verso i servizi interni."
+    },
+    {
+      "id": "api",
+      "label": "Core API",
+      "group": "backend",
+      "description": "Servizio principale REST/JSON."
+    },
+    {
+      "id": "worker",
+      "label": "Worker",
+      "group": "backend",
+      "description": "Elabora task asincroni in background."
+    },
+    {
+      "id": "db",
+      "label": "Database",
+      "group": "infra",
+      "description": "Archivio relazionale persistente."
+    },
+    {
+      "id": "docs",
+      "label": "Documentazione",
+      "group": "docs",
+      "description": "Specifiche tecniche e runbook operativi."
+    }
+  ],
+  "links": [
+    {
+      "source": "proxy",
+      "target": "api",
+      "relation": "HTTPS"
+    },
+    {
+      "source": "api",
+      "target": "db",
+      "relation": "SQL"
+    },
+    {
+      "source": "api",
+      "target": "worker",
+      "relation": "Queue"
+    },
+    {
+      "source": "worker",
+      "target": "db",
+      "relation": "Write"
+    },
+    {
+      "source": "docs",
+      "target": "api",
+      "relation": "Documenta"
+    }
+  ]
+}

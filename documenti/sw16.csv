@@ -1,0 +1,15 @@
+﻿Ufficio;Patch;Switch;Dispositivo;VLAN;VLAN ID;VLAN TAG;SUBNET;LAN
+Ufficio Trecci A;2;1;Telefono Voip Trecci A;Centralino;VLAN3;15;192.168.15.0/24;LAN4
+Ufficio Trecci F;5;2;Telefono Voip Trecci F;Centralino;VLAN3;15;192.168.15.0/24;LAN4
+Ufficio Trecci G;53;3;Telefono Voip Trecci G;Centralino;VLAN3;15;192.168.15.0/24;LAN4
+Ufficio Rossi;7;4;Telefono Voip Rossi;Centralino;VLAN3;15;192.168.15.0/24;LAN4
+Ufficio Sviluppo P1;26;5;Telefono Voip P1 (MASTER);Centralino;VLAN3;15;192.168.15.0/24;LAN4
+Access Point;;6;Access Point;Access Point;VLAN10;16;192.168.16.0/24;LAN11
+Access Point;16;7;Access Point;Access Point;VLAN10;16;192.168.16.0/24;LAN11
+Management;;8;Management;Management;VLAN11;UNTAGGED;172.16.1.0/24;LAN12
+Ufficio Sviluppo P4;antenna cordless;9;Coordless Voip;Centralino;VLAN3;15;192.168.15.0/24;LAN4
+Management;;10;Management;Management;VLAN11;UNTAGGED;172.16.1.0/24;LAN12
+Management;;11;Management;Management;VLAN11;UNTAGGED;172.16.1.0/24;LAN12
+Management;;12;Management;Management;VLAN11;UNTAGGED;172.16.1.0/24;LAN12
+Management;;15;Wifi Guest;Wifi Guest;VLAN10;16;192.168.16.0/24;LAN11
+Router;drytek;16;Wifi Guest;Wifi Guest;VLAN10;16;192.168.16.0/24;LAN11

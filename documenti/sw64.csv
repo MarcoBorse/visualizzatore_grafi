@@ -1,0 +1,49 @@
+﻿Ufficio;Cavo;Patch;Switch;Dispositivo;VLAN;VLAN ID;VLAN TAG;SUBNET;LAN
+;;;;;;;;;
+Sala Server;blu;;2;QNAP Master;Server 2;VLAN1;13;192.168.13.0/24;LAN2
+Sala Server;blu;;3;Cluster telecamere;Server 3;VLAN2;14;192.168.14.0/24;LAN3
+Sala Server;grigio;;4;Ajax sitem;Server 3;VLAN2;14;192.168.14.0/24;LAN3
+;;;5;;;;;;
+;;;6;;;;;;
+Sala Conferenza;giallo;17;7;Televisore;Conferenza;VLAN9;25;10.0.25.0/24;LAN10
+Sala Conferenza;giallo;13;8;Tavolo;Conferenza;VLAN9;25;10.0.25.0/24;LAN10
+Sala Conferenza;giallo;14;9;Tavolo;Conferenza;VLAN9;25;10.0.25.0/24;LAN10
+;;;10;;;;;;
+Ufficio Trecci A;viola;1;11;Pc Trecci A;Amministrazione;VLAN4;16;10.0.20.0/24;LAN5
+Ufficio Trecci F;viola;4;12;Pc Trecci F;Amministrazione;VLAN4;16;10.0.20.0/24;LAN5
+Ufficio Trecci G;viola;52;13;Pc Trecci G;Amministrazione;VLAN4;16;10.0.20.0/24;LAN5
+Ufficio Laboratorio;nero;43;14;Libero;Laboratorio;VLAN8;24;10.0.24.0/24;LAN9
+Ufficio Laboratorio;nero;39;15;Libero;Laboratorio;VLAN8;24;10.0.24.0/24;LAN9
+Ufficio Laboratorio;nero;40;16;Libero;Laboratorio;VLAN8;24;10.0.24.0/24;LAN9
+Ufficio Laboratorio;nero;45;17;Libero;Laboratorio;VLAN8;24;10.0.24.0/24;LAN9
+Ufficio Laboratorio;nero;46;18;Libero;Laboratorio;VLAN8;24;10.0.24.0/24;LAN9
+Ufficio Rossi;bianco;9;19;Pc Rossi;Tecnico 1;VLAN5;21;10.0.21.0/24;LAN6
+;;;20;;;;;;
+;;;21;;;;;;
+Ufficio Sviluppo P1;rosso;32;22;Pc P1 (Borselli);Tecnico 2;VLAN6;22;10.0.22.0/24;LAN7
+Ufficio Sviluppo P2;rosso;30;23;Pc P2 (Zaza);Tecnico 2;VLAN6;22;10.0.22.0/24;LAN7
+Ufficio Sviluppo P3;rosso;21;24;Pc P3 (Straffi);Tecnico 2;VLAN6;22;10.0.22.0/24;LAN7
+Ufficio Sviluppo P2;rosso;22;25;Libera;Tecnico 2;VLAN6;22;10.0.22.0/24;LAN7
+Ufficio Sviluppo P4;rosso;20;26;Pc P4 (Di Genua);Tecnico 2;VLAN6;22;10.0.22.0/24;LAN7
+;;;27;;;;;;
+;;;28;;;;;;
+;;;29;;;;;;
+;;;30;;;;;;
+Ufficio Laboratorio;blu;41;31;Pc Bellini;Tecnico 3;VLAN7;23;10.0.23.0/24;LAN8
+Ufficio Laboratorio;blu;47;32;Pc Donati;Tecnico 3;VLAN7;23;10.0.23.0/24;LAN8
+Ufficio Laboratorio;blu;44;33;Pc Sciuti;Tecnico 3;VLAN7;23;10.0.23.0/24;LAN8
+;;;34;;;;;;
+;;;35;;;;;;
+;;;36;;;;;;
+Stampante;bianco;37;37;Stampante;Stampante;VLAN11;17;172.20.1.0/24;LAN13
+;;;38;;;;;;
+Ufficio Sviluppo P1;;31;39;Scheda in test;Laboratorio;VLAN8;24;10.0.24.0/24;LAN9
+;verde;Magazzino;40;Libero;Laboratorio;VLAN8;24;10.0.24.0/24;LAN9
+Ufficio Laboratorio;;42;41;Libero;Laboratorio;VLAN8;24;10.0.24.0/24;LAN9
+;;;42;;;;;;
+;;;43;;;;;;
+;;;44;;;;;;
+;;;45;;;;;;
+;;;46;;;;;;
+;;;47;;;;;;
+Sala Server;;dryteck;48;Router;Uplink;UPLINK;UPLINK;;

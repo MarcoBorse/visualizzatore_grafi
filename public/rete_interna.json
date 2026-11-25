@@ -1,0 +1,1335 @@
+{
+    "nodes": [
+        {
+            "id": "INTERNET",
+            "label": "Internet",
+            "group": "",
+            "description": "",
+            "info": []
+        },
+        {
+            "id": "pfsense_router",
+            "label": "Pfsense GSM",
+            "group": "",
+            "description": "",
+            "info": []
+        },
+        {
+            "id": "router_gsm",
+            "label": "Router gsm",
+            "group": "varco1",
+            "description": "",
+            "info": []
+        },
+        {
+            "id": "ocr_1",
+            "label": "OCR 1",
+            "group": "varco1",
+            "description": "",
+            "info": []
+        },
+        {
+            "id": "pmv_1",
+            "label": "PMV 1",
+            "group": "varco1",
+            "description": "",
+            "info": []
+        },
+        {
+            "id": "ont_fibra",
+            "label": "Ont Fibra",
+            "group": "Fornitura Internet",
+            "description": "Terminazione fibra ottica collegata al router DryTek.",
+            "info": [
+                {
+                    "ufficio": "Sala Server"
+                }
+            ]
+        },
+        {
+            "id": "r_gsm",
+            "label": "Router GSM",
+            "group": "Fornitura Internet",
+            "description": "Connettività di backup GSM collegata al router DryTek.",
+            "info": [
+                {
+                    "ufficio": "Sala Server"
+                }
+            ]
+        },
+        {
+            "id": "routerl3",
+            "label": "DryTek Router L3",
+            "group": "Management",
+            "description": "Router L3 principale con uplink verso sw64 (Porta 48) e sw16 (Porta 16).",
+            "info": [
+                {
+                    "ufficio": "Sala Server"
+                },
+                {
+                    "vlan": "VLAN11"
+                },
+                {
+                    "vlanTag": "UNTAGGED"
+                },
+                {
+                    "subnet": "172.16.1.0/24"
+                },
+                {
+                    "lan": "LAN12"
+                }
+            ]
+        },
+        {
+            "id": "sw64",
+            "label": "SW Principale (64p)",
+            "group": "Management",
+            "description": "Switch principale 64 porte per Server 2/3, Amministrazione, Tecnico 1/2/3, Laboratorio, Conferenza e Stampante.",
+            "info": [
+                {
+                    "ufficio": "Sala Server"
+                },
+                {
+                    "porta": "48 (Uplink)"
+                },
+                {
+                    "patch": "dryteck"
+                },
+                {
+                    "vlan": "VLAN11"
+                },
+                {
+                    "vlanTag": "UNTAGGED"
+                },
+                {
+                    "subnet": "172.16.1.0/24"
+                },
+                {
+                    "lan": "LAN12"
+                }
+            ]
+        },
+        {
+            "id": "sw16",
+            "label": "SW PoE (16p)",
+            "group": "Management",
+            "description": "Switch PoE 16 porte per Centralino VoIP e Wifi Guest / Access Point.",
+            "info": [
+                {
+                    "ufficio": "Sala Server"
+                },
+                {
+                    "porta": "8, 10, 11, 12 (Mgmt) / 16 (Uplink)"
+                },
+                {
+                    "patch": "drytek"
+                },
+                {
+                    "vlan": "VLAN11"
+                },
+                {
+                    "vlanTag": "UNTAGGED"
+                },
+                {
+                    "subnet": "172.16.1.0/24"
+                },
+                {
+                    "lan": "LAN12"
+                }
+            ]
+        },
+        {
+            "id": "pfsense_ad",
+            "label": "Pfsense",
+            "group": "Server 1",
+            "description": "Firewall e tunnel VPN verso Active Directory.",
+            "info": [
+                {
+                    "ufficio": "Sala Server"
+                },
+                {
+                    "vlan": "VLAN0"
+                },
+                {
+                    "vlanTag": "12"
+                },
+                {
+                    "subnet": "192.168.12.0/24"
+                },
+                {
+                    "lan": "LAN1"
+                }
+            ]
+        },
+        {
+            "id": "active_directory",
+            "label": "Active Directory",
+            "group": "Server 1",
+            "description": "Controller di dominio Active Directory.",
+            "info": [
+                {
+                    "ufficio": "Sala Server"
+                },
+                {
+                    "vlan": "VLAN0"
+                },
+                {
+                    "vlanTag": "12"
+                },
+                {
+                    "subnet": "192.168.12.0/24"
+                },
+                {
+                    "lan": "LAN1"
+                }
+            ]
+        },
+        {
+            "id": "nas",
+            "label": "QNAP Master",
+            "group": "Server 2",
+            "description": "Storage NAS principale.",
+            "info": [
+                {
+                    "ufficio": "Sala Server"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "2"
+                },
+                {
+                    "cavo": "blu"
+                },
+                {
+                    "vlan": "VLAN1"
+                },
+                {
+                    "vlanTag": "13"
+                },
+                {
+                    "subnet": "192.168.13.0/24"
+                },
+                {
+                    "lan": "LAN2"
+                }
+            ]
+        },
+        {
+            "id": "nvm",
+            "label": "Cluster Telecamere (NVM)",
+            "group": "Server 3",
+            "description": "Server registrazione videosorveglianza.",
+            "info": [
+                {
+                    "ufficio": "Sala Server"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "3"
+                },
+                {
+                    "cavo": "blu"
+                },
+                {
+                    "vlan": "VLAN2"
+                },
+                {
+                    "vlanTag": "14"
+                },
+                {
+                    "subnet": "192.168.14.0/24"
+                },
+                {
+                    "lan": "LAN3"
+                }
+            ]
+        },
+        {
+            "id": "ajax",
+            "label": "Ajax System",
+            "group": "Server 3",
+            "description": "Centrale sistema di allarme Ajax.",
+            "info": [
+                {
+                    "ufficio": "Sala Server"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "4"
+                },
+                {
+                    "cavo": "grigio"
+                },
+                {
+                    "vlan": "VLAN2"
+                },
+                {
+                    "vlanTag": "14"
+                },
+                {
+                    "subnet": "192.168.14.0/24"
+                },
+                {
+                    "lan": "LAN3"
+                }
+            ]
+        },
+        {
+            "id": "tlc_ingresso",
+            "label": "TLC Ingresso",
+            "group": "TLC",
+            "description": "Telecamera ingresso collegata al Cluster telecamere (NVM).",
+            "info": [
+                {
+                    "ufficio": "Ingresso"
+                }
+            ]
+        },
+        {
+            "id": "tlc_openspace",
+            "label": "TLC Openspace",
+            "group": "TLC",
+            "description": "Telecamera openspace collegata al Cluster telecamere (NVM).",
+            "info": [
+                {
+                    "ufficio": "Openspace"
+                }
+            ]
+        },
+        {
+            "id": "stampante",
+            "label": "Stampante",
+            "group": "Stampante",
+            "description": "Stampante di rete condivisa.",
+            "info": [
+                {
+                    "ufficio": "Stampante"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "37"
+                },
+                {
+                    "patch": "37"
+                },
+                {
+                    "cavo": "bianco"
+                },
+                {
+                    "vlan": "VLAN11"
+                },
+                {
+                    "vlanTag": "17"
+                },
+                {
+                    "subnet": "172.20.1.0/24"
+                },
+                {
+                    "lan": "LAN13"
+                }
+            ]
+        },
+        {
+            "id": "SBC",
+            "label": "Yalink SBC",
+            "group": "Centralino",
+            "description": "Session Border Controller / Centralino VoIP.",
+            "info": [
+                {
+                    "vlan": "VLAN3"
+                },
+                {
+                    "vlanTag": "15"
+                },
+                {
+                    "subnet": "192.168.15.0/24"
+                },
+                {
+                    "lan": "LAN4"
+                }
+            ]
+        },
+        {
+            "id": "voip_trecci_a",
+            "label": "Telefono Voip Trecci A",
+            "group": "Centralino",
+            "description": "Interno VoIP Ufficio Trecci A.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Trecci A"
+                },
+                {
+                    "switch": "sw16"
+                },
+                {
+                    "porta": "1"
+                },
+                {
+                    "patch": "2"
+                },
+                {
+                    "vlan": "VLAN3"
+                },
+                {
+                    "vlanTag": "15"
+                },
+                {
+                    "subnet": "192.168.15.0/24"
+                },
+                {
+                    "lan": "LAN4"
+                }
+            ]
+        },
+        {
+            "id": "voip_trecci_f",
+            "label": "Telefono Voip Trecci F",
+            "group": "Centralino",
+            "description": "Interno VoIP Ufficio Trecci F.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Trecci F"
+                },
+                {
+                    "switch": "sw16"
+                },
+                {
+                    "porta": "2"
+                },
+                {
+                    "patch": "5"
+                },
+                {
+                    "vlan": "VLAN3"
+                },
+                {
+                    "vlanTag": "15"
+                },
+                {
+                    "subnet": "192.168.15.0/24"
+                },
+                {
+                    "lan": "LAN4"
+                }
+            ]
+        },
+        {
+            "id": "voip_trecci_g",
+            "label": "Telefono Voip Trecci G",
+            "group": "Centralino",
+            "description": "Interno VoIP Ufficio Trecci G.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Trecci G"
+                },
+                {
+                    "switch": "sw16"
+                },
+                {
+                    "porta": "3"
+                },
+                {
+                    "patch": "53"
+                },
+                {
+                    "vlan": "VLAN3"
+                },
+                {
+                    "vlanTag": "15"
+                },
+                {
+                    "subnet": "192.168.15.0/24"
+                },
+                {
+                    "lan": "LAN4"
+                }
+            ]
+        },
+        {
+            "id": "voip_rossi",
+            "label": "Telefono Voip Rossi",
+            "group": "Centralino",
+            "description": "Interno VoIP Ufficio Rossi.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Rossi"
+                },
+                {
+                    "switch": "sw16"
+                },
+                {
+                    "porta": "4"
+                },
+                {
+                    "patch": "7"
+                },
+                {
+                    "vlan": "VLAN3"
+                },
+                {
+                    "vlanTag": "15"
+                },
+                {
+                    "subnet": "192.168.15.0/24"
+                },
+                {
+                    "lan": "LAN4"
+                }
+            ]
+        },
+        {
+            "id": "voip_p1_master",
+            "label": "Telefono Voip P1 (MASTER)",
+            "group": "Centralino",
+            "description": "Telefono VoIP Master Ufficio Sviluppo P1.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Sviluppo P1"
+                },
+                {
+                    "switch": "sw16"
+                },
+                {
+                    "porta": "5"
+                },
+                {
+                    "patch": "26"
+                },
+                {
+                    "vlan": "VLAN3"
+                },
+                {
+                    "vlanTag": "15"
+                },
+                {
+                    "subnet": "192.168.15.0/24"
+                },
+                {
+                    "lan": "LAN4"
+                }
+            ]
+        },
+        {
+            "id": "voip_cordless",
+            "label": "Coordless Voip",
+            "group": "Centralino",
+            "description": "Base cordless VoIP.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Sviluppo P4"
+                },
+                {
+                    "switch": "sw16"
+                },
+                {
+                    "porta": "9"
+                },
+                {
+                    "patch": "antenna cordless"
+                },
+                {
+                    "vlan": "VLAN3"
+                },
+                {
+                    "vlanTag": "15"
+                },
+                {
+                    "subnet": "192.168.15.0/24"
+                },
+                {
+                    "lan": "LAN4"
+                }
+            ]
+        },
+        {
+            "id": "ap_1",
+            "label": "Access Point (Porta 6)",
+            "group": "Wifi Guest",
+            "description": "Access Point Wi-Fi.",
+            "info": [
+                {
+                    "ufficio": "Access Point"
+                },
+                {
+                    "switch": "sw16"
+                },
+                {
+                    "porta": "6"
+                },
+                {
+                    "vlan": "VLAN10"
+                },
+                {
+                    "vlanTag": "16"
+                },
+                {
+                    "subnet": "192.168.16.0/24"
+                },
+                {
+                    "lan": "LAN11"
+                }
+            ]
+        },
+        {
+            "id": "ap_2",
+            "label": "Access Point (Porta 7)",
+            "group": "Wifi Guest",
+            "description": "Access Point Wi-Fi.",
+            "info": [
+                {
+                    "ufficio": "Access Point"
+                },
+                {
+                    "switch": "sw16"
+                },
+                {
+                    "porta": "7"
+                },
+                {
+                    "patch": "16"
+                },
+                {
+                    "vlan": "VLAN10"
+                },
+                {
+                    "vlanTag": "16"
+                },
+                {
+                    "subnet": "192.168.16.0/24"
+                },
+                {
+                    "lan": "LAN11"
+                }
+            ]
+        },
+        {
+            "id": "wifi_guest_15",
+            "label": "Wifi Guest (Porta 15)",
+            "group": "Wifi Guest",
+            "description": "Porta dedicata alla rete Wifi Guest.",
+            "info": [
+                {
+                    "ufficio": "Management"
+                },
+                {
+                    "switch": "sw16"
+                },
+                {
+                    "porta": "15"
+                },
+                {
+                    "vlan": "VLAN10"
+                },
+                {
+                    "vlanTag": "16"
+                },
+                {
+                    "subnet": "192.168.16.0/24"
+                },
+                {
+                    "lan": "LAN11"
+                }
+            ]
+        },
+        {
+            "id": "pc_trecci_a",
+            "label": "Pc Trecci A",
+            "group": "Amministrazione",
+            "description": "Postazione PC Amministrazione.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Trecci A"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "11"
+                },
+                {
+                    "patch": "1"
+                },
+                {
+                    "cavo": "viola"
+                },
+                {
+                    "vlan": "VLAN4"
+                },
+                {
+                    "vlanTag": "20"
+                },
+                {
+                    "subnet": "10.0.20.0/24"
+                },
+                {
+                    "lan": "LAN5"
+                }
+            ]
+        },
+        {
+            "id": "pc_trecci_f",
+            "label": "Pc Trecci F",
+            "group": "Amministrazione",
+            "description": "Postazione PC Amministrazione.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Trecci F"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "12"
+                },
+                {
+                    "patch": "4"
+                },
+                {
+                    "cavo": "viola"
+                },
+                {
+                    "vlan": "VLAN4"
+                },
+                {
+                    "vlanTag": "20"
+                },
+                {
+                    "subnet": "10.0.20.0/24"
+                },
+                {
+                    "lan": "LAN5"
+                }
+            ]
+        },
+        {
+            "id": "pc_trecci_g",
+            "label": "Pc Trecci G",
+            "group": "Amministrazione",
+            "description": "Postazione PC Amministrazione.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Trecci G"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "13"
+                },
+                {
+                    "patch": "52"
+                },
+                {
+                    "cavo": "viola"
+                },
+                {
+                    "vlan": "VLAN4"
+                },
+                {
+                    "vlanTag": "20"
+                },
+                {
+                    "subnet": "10.0.20.0/24"
+                },
+                {
+                    "lan": "LAN5"
+                }
+            ]
+        },
+        {
+            "id": "pc_rossi",
+            "label": "Pc Rossi",
+            "group": "Tecnico 1",
+            "description": "Postazione PC Tecnico 1.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Rossi"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "19"
+                },
+                {
+                    "patch": "9"
+                },
+                {
+                    "cavo": "bianco"
+                },
+                {
+                    "vlan": "VLAN5"
+                },
+                {
+                    "vlanTag": "21"
+                },
+                {
+                    "subnet": "10.0.21.0/24"
+                },
+                {
+                    "lan": "LAN6"
+                }
+            ]
+        },
+        {
+            "id": "pc_borselli",
+            "label": "Pc P1 (Borselli)",
+            "group": "Tecnico 2",
+            "description": "Postazione PC Sviluppo P1.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Sviluppo P1"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "22"
+                },
+                {
+                    "patch": "32"
+                },
+                {
+                    "cavo": "rosso"
+                },
+                {
+                    "vlan": "VLAN6"
+                },
+                {
+                    "vlanTag": "22"
+                },
+                {
+                    "subnet": "10.0.22.0/24"
+                },
+                {
+                    "lan": "LAN7"
+                }
+            ]
+        },
+        {
+            "id": "pc_zaza",
+            "label": "Pc P2 (Zaza)",
+            "group": "Tecnico 2",
+            "description": "Postazione PC Sviluppo P2.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Sviluppo P2"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "23"
+                },
+                {
+                    "patch": "30"
+                },
+                {
+                    "cavo": "rosso"
+                },
+                {
+                    "vlan": "VLAN6"
+                },
+                {
+                    "vlanTag": "22"
+                },
+                {
+                    "subnet": "10.0.22.0/24"
+                },
+                {
+                    "lan": "LAN7"
+                }
+            ]
+        },
+        {
+            "id": "pc_straffi",
+            "label": "Pc P3 (Straffi)",
+            "group": "Tecnico 2",
+            "description": "Postazione PC Sviluppo P3.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Sviluppo P3"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "24"
+                },
+                {
+                    "patch": "21"
+                },
+                {
+                    "cavo": "rosso"
+                },
+                {
+                    "vlan": "VLAN6"
+                },
+                {
+                    "vlanTag": "22"
+                },
+                {
+                    "subnet": "10.0.22.0/24"
+                },
+                {
+                    "lan": "LAN7"
+                }
+            ]
+        },
+        {
+            "id": "pc_bellini",
+            "label": "Pc Bellini",
+            "group": "Tecnico 3",
+            "description": "Postazione PC Tecnico 3.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Laboratorio"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "31"
+                },
+                {
+                    "patch": "41"
+                },
+                {
+                    "cavo": "blu"
+                },
+                {
+                    "vlan": "VLAN7"
+                },
+                {
+                    "vlanTag": "23"
+                },
+                {
+                    "subnet": "10.0.23.0/24"
+                },
+                {
+                    "lan": "LAN8"
+                }
+            ]
+        },
+        {
+            "id": "pc_donati",
+            "label": "Pc Donati",
+            "group": "Tecnico 3",
+            "description": "Postazione PC Tecnico 3.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Laboratorio"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "32"
+                },
+                {
+                    "patch": "47"
+                },
+                {
+                    "cavo": "blu"
+                },
+                {
+                    "vlan": "VLAN7"
+                },
+                {
+                    "vlanTag": "23"
+                },
+                {
+                    "subnet": "10.0.23.0/24"
+                },
+                {
+                    "lan": "LAN8"
+                }
+            ]
+        },
+        {
+            "id": "pc_sciuti",
+            "label": "Pc Sciuti",
+            "group": "Tecnico 3",
+            "description": "Postazione PC Tecnico 3.",
+            "info": [
+                {
+                    "ufficio": "Ufficio Laboratorio"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "33"
+                },
+                {
+                    "patch": "44"
+                },
+                {
+                    "cavo": "blu"
+                },
+                {
+                    "vlan": "VLAN7"
+                },
+                {
+                    "vlanTag": "23"
+                },
+                {
+                    "subnet": "10.0.23.0/24"
+                },
+                {
+                    "lan": "LAN8"
+                }
+            ]
+        },
+        {
+            "id": "conf_tv",
+            "label": "Televisore",
+            "group": "Conferenza",
+            "description": "Televisore Sala Conferenza.",
+            "info": [
+                {
+                    "ufficio": "Sala Conferenza"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "7"
+                },
+                {
+                    "patch": "17"
+                },
+                {
+                    "cavo": "giallo"
+                },
+                {
+                    "vlan": "VLAN9"
+                },
+                {
+                    "vlanTag": "25"
+                },
+                {
+                    "subnet": "10.0.25.0/24"
+                },
+                {
+                    "lan": "LAN10"
+                }
+            ]
+        },
+        {
+            "id": "conf_tavolo_1",
+            "label": "Tavolo (Porta 8)",
+            "group": "Conferenza",
+            "description": "Presa tavolo Sala Conferenza.",
+            "info": [
+                {
+                    "ufficio": "Sala Conferenza"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "8"
+                },
+                {
+                    "patch": "13"
+                },
+                {
+                    "cavo": "giallo"
+                },
+                {
+                    "vlan": "VLAN9"
+                },
+                {
+                    "vlanTag": "25"
+                },
+                {
+                    "subnet": "10.0.25.0/24"
+                },
+                {
+                    "lan": "LAN10"
+                }
+            ]
+        },
+        {
+            "id": "conf_tavolo_2",
+            "label": "Tavolo (Porta 9)",
+            "group": "Conferenza",
+            "description": "Presa tavolo Sala Conferenza.",
+            "info": [
+                {
+                    "ufficio": "Sala Conferenza"
+                },
+                {
+                    "switch": "sw64"
+                },
+                {
+                    "porta": "9"
+                },
+                {
+                    "patch": "14"
+                },
+                {
+                    "cavo": "giallo"
+                },
+                {
+                    "vlan": "VLAN9"
+                },
+                {
+                    "vlanTag": "25"
+                },
+                {
+                    "subnet": "10.0.25.0/24"
+                },
+                {
+                    "lan": "LAN10"
+                }
+            ]
+        }
+    ],
+    "links": [
+        {
+            "source": "routerl3",
+            "target": "ont_fibra",
+            "relation": "wan"
+        },
+        {
+            "source": "routerl3",
+            "target": "r_gsm",
+            "relation": "wan"
+        },
+        {
+            "source": "routerl3",
+            "target": "pfsense_ad",
+            "relation": "vpn"
+        },
+        {
+            "source": "pfsense_ad",
+            "target": "active_directory",
+            "relation": "192.168.12.0/24"
+        },
+        {
+            "source": "sw64",
+            "target": "routerl3",
+            "relation": "uplink p48"
+        },
+        {
+            "source": "sw16",
+            "target": "routerl3",
+            "relation": "uplink p16"
+        },
+        {
+            "source": "nas",
+            "target": "sw64",
+            "relation": "p2 · 192.168.13.0/24"
+        },
+        {
+            "source": "nvm",
+            "target": "sw64",
+            "relation": "p3 · 192.168.14.0/24"
+        },
+        {
+            "source": "ajax",
+            "target": "sw64",
+            "relation": "p4 · 192.168.14.0/24"
+        },
+        {
+            "source": "tlc_ingresso",
+            "target": "nvm",
+            "relation": "videosorveglianza"
+        },
+        {
+            "source": "tlc_openspace",
+            "target": "nvm",
+            "relation": "videosorveglianza"
+        },
+        {
+            "source": "stampante",
+            "target": "sw64",
+            "relation": "p37 · 172.20.1.0/24"
+        },
+        {
+            "source": "SBC",
+            "target": "sw16",
+            "relation": "voip · 192.168.15.0/24"
+        },
+        {
+            "source": "voip_trecci_a",
+            "target": "sw16",
+            "relation": "p1 · voip"
+        },
+        {
+            "source": "voip_trecci_f",
+            "target": "sw16",
+            "relation": "p2 · voip"
+        },
+        {
+            "source": "voip_trecci_g",
+            "target": "sw16",
+            "relation": "p3 · voip"
+        },
+        {
+            "source": "voip_rossi",
+            "target": "sw16",
+            "relation": "p4 · voip"
+        },
+        {
+            "source": "voip_p1_master",
+            "target": "sw16",
+            "relation": "p5 · voip"
+        },
+        {
+            "source": "voip_cordless",
+            "target": "sw16",
+            "relation": "p9 · voip"
+        },
+        {
+            "source": "ap_1",
+            "target": "sw16",
+            "relation": "p6 · 192.168.16.0/24"
+        },
+        {
+            "source": "ap_2",
+            "target": "sw16",
+            "relation": "p7 · 192.168.16.0/24"
+        },
+        {
+            "source": "wifi_guest_15",
+            "target": "sw16",
+            "relation": "p15 · 192.168.16.0/24"
+        },
+        {
+            "source": "pc_trecci_a",
+            "target": "sw64",
+            "relation": "p11 · 10.0.20.0/24"
+        },
+        {
+            "source": "pc_trecci_f",
+            "target": "sw64",
+            "relation": "p12 · 10.0.20.0/24"
+        },
+        {
+            "source": "pc_trecci_g",
+            "target": "sw64",
+            "relation": "p13 · 10.0.20.0/24"
+        },
+        {
+            "source": "pc_rossi",
+            "target": "sw64",
+            "relation": "p19 · 10.0.21.0/24"
+        },
+        {
+            "source": "pc_borselli",
+            "target": "sw64",
+            "relation": "p22 · 10.0.22.0/24"
+        },
+        {
+            "source": "pc_zaza",
+            "target": "sw64",
+            "relation": "p23 · 10.0.22.0/24"
+        },
+        {
+            "source": "pc_straffi",
+            "target": "sw64",
+            "relation": "p24 · 10.0.22.0/24"
+        },
+        {
+            "source": "pc_bellini",
+            "target": "sw64",
+            "relation": "p31 · 10.0.23.0/24"
+        },
+        {
+            "source": "pc_donati",
+            "target": "sw64",
+            "relation": "p32 · 10.0.23.0/24"
+        },
+        {
+            "source": "pc_sciuti",
+            "target": "sw64",
+            "relation": "p33 · 10.0.23.0/24"
+        },
+        {
+            "source": "conf_tv",
+            "target": "sw64",
+            "relation": "p7 · 10.0.25.0/24"
+        },
+        {
+            "source": "conf_tavolo_1",
+            "target": "sw64",
+            "relation": "p8 · 10.0.25.0/24"
+        },
+        {
+            "source": "conf_tavolo_2",
+            "target": "sw64",
+            "relation": "p9 · 10.0.25.0/24"
+        },
+        {
+            "source": "ont_fibra",
+            "target": "INTERNET",
+            "relation": "fibra"
+        },
+        {
+            "source": "r_gsm",
+            "target": "INTERNET",
+            "relation": "gms"
+        },
+        {
+            "source": "ocr_1",
+            "target": "router_gsm",
+            "relation": "lan"
+        },
+        {
+            "source": "pmv_1",
+            "target": "router_gsm",
+            "relation": "lan"
+        },
+        {
+            "source": "router_gsm",
+            "target": "INTERNET",
+            "relation": "gsm"
+        },
+        {
+            "source": "pfsense_router",
+            "target": "INTERNET",
+            "relation": "fibra"
+        },
+        {
+            "source": "router_gsm",
+            "target": "pfsense_router",
+            "relation": "vpn"
+        },
+        {
+            "source": "pc_borselli",
+            "target": "pfsense_router",
+            "relation": "vpn"
+        },
+        {
+            "source": "pc_donati",
+            "target": "pfsense_router",
+            "relation": "vpn"
+        },
+        {
+            "source": "pc_sciuti",
+            "target": "pfsense_router",
+            "relation": "vpn"
+        },
+        {
+            "source": "pc_straffi",
+            "target": "pfsense_router",
+            "relation": "vpn"
+        },
+        {
+            "source": "pc_zaza",
+            "target": "pfsense_router",
+            "relation": "vpn"
+        }
+    ]
+}

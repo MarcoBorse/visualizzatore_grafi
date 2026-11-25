@@ -1,0 +1,287 @@
+{
+    "nodes": [
+        {
+            "id": "active_directory",
+            "label": "Active Directory",
+            "group": "server",
+            "description": ""
+        },
+        {
+            "id": "nas",
+            "label": "Qnap NAS",
+            "group": "server",
+            "description": ""
+        },
+        {
+            "id": "stampante",
+            "label": "Stampante",
+            "group": "lan-stampante",
+            "description": ""
+        },
+        {
+            "id": "ajax",
+            "label": "Ajax",
+            "group": "server",
+            "description": ""
+        },
+        {
+            "id": "nvm",
+            "label": "Nvm",
+            "group": "server",
+            "description": ""
+        },
+        {
+            "id": "tlc_ingresso",
+            "label": "TLC Ingresso",
+            "group": "tlc",
+            "description": ""
+        },
+        {
+            "id": "tlc_openspace",
+            "label": "TLC Openspace",
+            "group": "tlc",
+            "description": ""
+        },
+        {
+            "id": "pfsense_ad",
+            "label": "Pfsense",
+            "group": "server",
+            "description": ""
+        },
+        {
+            "id": "routerl3",
+            "label": "Dry Teck",
+            "group": "rete Lan",
+            "description": ""
+        },
+        {
+            "id": "ont_fibra",
+            "label": "Ont Fibra",
+            "group": "Fornitura Internet",
+            "description": ""
+        },
+        {
+            "id": "r_gsm",
+            "label": "Router GSM",
+            "group": "Fornitura Internet",
+            "description": ""
+        },
+        {
+            "id": "sw16",
+            "label": "SW PoE",
+            "group": "rete Lan",
+            "description": ""
+        },
+        {
+            "id": "sw64",
+            "label": "SW Principale",
+            "group": "rete Lan",
+            "description": ""
+        },
+        {
+            "id": "SBC",
+            "label": "Yalink SBC",
+            "group": "telefonia",
+            "description": ""
+        },
+        {
+            "id": "ya_giovanni",
+            "label": "Telefono Giovanni",
+            "group": "telefonia",
+            "description": ""
+        },
+        {
+            "id": "ya_francesco",
+            "label": "Telefono Francesco",
+            "group": "telefonia",
+            "description": ""
+        },
+        {
+            "id": "ya_alfonso",
+            "label": "Telefono Alfonso",
+            "group": "telefonia",
+            "description": ""
+        },
+        {
+            "id": "ya_riccardo",
+            "label": "Telefono Riccardo",
+            "group": "telefonia",
+            "description": ""
+        },
+        {
+            "id": "pc_rossi",
+            "label": "PC-Rossi",
+            "group": "lan-T1",
+            "description": ""
+        },
+        {
+            "id": "pc_zaza",
+            "label": "PC-Zaza",
+            "group": "lan-T2",
+            "description": ""
+        },
+        {
+            "id": "pc_straffi",
+            "label": "PC-Straffi",
+            "group": "lan-T2",
+            "description": ""
+        },
+        {
+            "id": "pc_sala",
+            "label": "PC-Sala",
+            "group": "lan-S",
+            "description": ""
+        },
+        {
+            "id": "pc_donati",
+            "label": "PC-Donati",
+            "group": "lan-T3",
+            "description": ""
+        },
+        {
+            "id": "pc_sciuti",
+            "label": "PC-Sciuti",
+            "group": "lan-T3",
+            "description": ""
+        },
+        {
+            "id": "pc_bellini",
+            "label": "PC-Bellini",
+            "group": "lan-T3",
+            "description": ""
+        },
+        {
+            "id": "pc_borselli",
+            "label": "PC-Borselli",
+            "group": "lan-T3",
+            "description": ""
+        }
+    ],
+    "links": [
+        {
+            "source": "routerl3",
+            "target": "ont_fibra",
+            "relation": "wan"
+        },
+        {
+            "source": "routerl3",
+            "target": "r_gsm",
+            "relation": "wan"
+        },
+        {
+            "source": "routerl3",
+            "target": "pfsense_ad",
+            "relation": "vpn"
+        },
+        {
+            "source": "pfsense_ad",
+            "target": "active_directory",
+            "relation": "lan"
+        },
+        {
+            "source": "sw64",
+            "target": "routerl3",
+            "relation": "lan"
+        },
+        {
+            "source": "sw16",
+            "target": "routerl3",
+            "relation": "lan"
+        },
+        {
+            "source": "sw64",
+            "target": "nas",
+            "relation": "server"
+        },
+        {
+            "source": "SBC",
+            "target": "sw16",
+            "relation": "voip"
+        },
+        {
+            "source": "ya_giovanni",
+            "target": "sw16",
+            "relation": "voip"
+        },
+        {
+            "source": "ya_francesco",
+            "target": "sw16",
+            "relation": "voip"
+        },
+        {
+            "source": "ya_alfonso",
+            "target": "sw16",
+            "relation": "voip"
+        },
+        {
+            "source": "ya_riccardo",
+            "target": "sw16",
+            "relation": "voip"
+        },
+        {
+            "source": "pc_rossi",
+            "target": "sw64",
+            "relation": "lan-T1"
+        },
+        {
+            "source": "pc_zaza",
+            "target": "sw64",
+            "relation": "lan-T2"
+        },
+        {
+            "source": "pc_straffi",
+            "target": "sw64",
+            "relation": "lan-T2"
+        },
+        {
+            "source": "pc_sala",
+            "target": "sw64",
+            "relation": "lan-S"
+        },
+        {
+            "source": "pc_donati",
+            "target": "sw64",
+            "relation": "lan-T3"
+        },
+        {
+            "source": "pc_sciuti",
+            "target": "sw64",
+            "relation": "lan-T3"
+        },
+        {
+            "source": "pc_borselli",
+            "target": "sw64",
+            "relation": "lan-T3"
+        },
+        {
+            "source": "pc_bellini",
+            "target": "sw64",
+            "relation": "lan-T3"
+        },
+        {
+            "source": "tlc_ingresso",
+            "target": "nvm",
+            "relation": "videosorveglianza"
+        },
+        {
+            "source": "tlc_openspace",
+            "target": "nvm",
+            "relation": "videosorveglianza"
+        },
+        {
+            "source": "ajax",
+            "target": "sw64",
+            "relation": "server"
+        },
+        {
+            "source": "nvm",
+            "target": "sw64",
+            "relation": "server"
+        },
+        {
+            "source": "stampante",
+            "target": "sw64",
+            "relation": "lan-stampante"
+        }
+    ]
+}
