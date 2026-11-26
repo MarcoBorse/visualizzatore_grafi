@@ -1,5 +1,5 @@
 <template>
-  <div class="network-container" ref="containerRef">
+  <div class="network-container" :class="{ 'large-graph': isLargeGraph }" ref="containerRef">
     <svg ref="svgRef" class="graph-svg" @click="onSvgClick">
       <defs>
         <!-- Background Grid Pattern -->
@@ -66,15 +66,15 @@
             'link--dimmed': isLinkDimmed(link)
           }">
             <!-- Background invisible thick stroke for easier click/hover -->
-            <line :x1="link.coords.x1" :y1="link.coords.y1" :x2="link.coords.x2" :y2="link.coords.y2"
-              stroke="transparent" stroke-width="14" />
+            <line v-if="!isLargeGraph || isLinkHighlighted(link)" :x1="link.coords.x1" :y1="link.coords.y1"
+              :x2="link.coords.x2" :y2="link.coords.y2" stroke="transparent" stroke-width="14" />
 
             <!-- Visible Link Line -->
             <line :x1="link.coords.x1" :y1="link.coords.y1" :x2="link.coords.x2" :y2="link.coords.y2" class="link-line"
               :marker-end="getMarkerEnd(link)" />
 
             <!-- Relation Badge on Link -->
-            <g v-if="showLabels && link.relation && link.coords"
+            <g v-if="showLabels && link.relation && link.coords && (!isLargeGraph || zoomTransform.k >= 0.65 || isLinkHighlighted(link))"
               :transform="`translate(${link.coords.badgeX}, ${link.coords.badgeY})`" class="relation-badge">
               <rect :x="-calcTextWidth(getRelationText(link)) / 2 - 6" y="-10"
                 :width="calcTextWidth(getRelationText(link)) + 12" height="20" rx="10" class="relation-badge-bg" />
@@ -93,23 +93,24 @@
               'node--hovered': hoveredNodeId === node.id,
               'node--connected': isNodeConnectedToActive(node.id),
               'node--dimmed': isNodeDimmed(node.id),
-              'node--matched': searchMatch(node),
+              'node--matched': searchMatchedIds.has(node.id),
               'node--pinned': node.pinned
             }" @pointerdown.stop="startDrag(node, $event)" @click.stop="selectNode(node)"
             @mouseenter="onNodeHover(node.id)" @mouseleave="onNodeLeave()">
             <!-- Selection / Pulsing Outer Ring -->
-            <circle v-if="selectedNodeId === node.id || searchMatch(node)" :r="getNodeRadius(node) + 12"
+            <circle v-if="selectedNodeId === node.id || searchMatchedIds.has(node.id)" :r="getNodeRadius(node) + 12"
               class="node-pulse-ring" />
 
             <!-- Hover / Focus Ring -->
-            <circle :r="getNodeRadius(node) + 6" class="node-halo"
+            <circle v-if="!isLargeGraph || hoveredNodeId === node.id || selectedNodeId === node.id"
+              :r="getNodeRadius(node) + 6" class="node-halo"
               :style="{ fill: getNodeColor(node.group), fillOpacity: 0.15 }" />
 
             <!-- Main Node Circle with Dynamic Radius -->
             <circle :r="getNodeRadius(node)" class="node-circle" :style="{
               fill: getNodeColor(node.group),
               stroke: selectedNodeId === node.id ? '#ffffff' : getNodeBorderColor(node.group)
-            }" filter="url(#shadow)" />
+            }" :filter="isLargeGraph ? undefined : 'url(#shadow)'" />
 
             <!-- Node Icon / Initial Letter -->
             <text class="node-icon" text-anchor="middle" :y="getNodeRadius(node) <= 20 ? 4 : 5"
@@ -118,7 +119,7 @@
             </text>
 
             <!-- Degree Badge (number of connections on node) -->
-            <g v-if="sizeByConnections && getNodeDegree(node.id) > 1"
+            <g v-if="sizeByConnections && getNodeDegree(node.id) > 1 && (!isLargeGraph || zoomTransform.k >= 0.45 || selectedNodeId === node.id || hoveredNodeId === node.id)"
               :transform="`translate(${-Math.round(getNodeRadius(node) * 0.72)}, ${-Math.round(getNodeRadius(node) * 0.72)})`"
               class="degree-badge">
               <circle r="7.5" class="degree-badge-bg" />
@@ -135,19 +136,22 @@
               <path d="M-2.5 -2.5 L2.5 2.5 M2.5 -2.5 L-2.5 2.5" stroke="#0f172a" stroke-width="1.5" />
             </g>
 
-            <!-- Node Label below circle -->
-            <g :transform="`translate(0, ${getNodeRadius(node) + 14})`" class="node-label-group">
-              <rect :x="-calcTextWidth(node.label) / 2 - 8" y="-10" :width="calcTextWidth(node.label) + 16" height="20"
-                rx="6" class="node-label-bg" />
-              <text text-anchor="middle" y="4" class="node-label-text">
-                {{ node.label }}
-              </text>
-            </g>
+            <!-- Node Label below circle (LOD for large graphs) -->
+            <template
+              v-if="!isLargeGraph || zoomTransform.k >= 0.5 || selectedNodeId === node.id || hoveredNodeId === node.id || isNodeConnectedToActive(node.id) || searchMatchedIds.has(node.id)">
+              <g :transform="`translate(0, ${getNodeRadius(node) + 14})`" class="node-label-group">
+                <rect :x="-calcTextWidth(node.label) / 2 - 8" y="-10" :width="calcTextWidth(node.label) + 16"
+                  height="20" rx="6" class="node-label-bg" />
+                <text text-anchor="middle" y="4" class="node-label-text">
+                  {{ node.label }}
+                </text>
+              </g>
 
-            <!-- Node Subtitle / Group Badge -->
-            <text :y="getNodeRadius(node) + 28" text-anchor="middle" class="node-sublabel">
-              {{ node.group }}
-            </text>
+              <!-- Node Subtitle / Group Badge -->
+              <text :y="getNodeRadius(node) + 28" text-anchor="middle" class="node-sublabel">
+                {{ getGroupDisplayName(node.group) }}
+              </text>
+            </template>
           </g>
         </g>
       </g>
@@ -162,9 +166,9 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, shallowRef, computed, watch, onMounted, onUnmounted } from 'vue'
 import * as d3 from 'd3'
-import { getGroupColor } from '../utils/groupColors'
+import { getGroupColor, getGroupLabel } from '../utils/groupColors'
 
 const props = defineProps({
   data: {
@@ -211,15 +215,27 @@ const emit = defineEmits(['select-node', 'node-drag-start'])
 const containerRef = ref(null)
 const svgRef = ref(null)
 
-// Simulation references and states
-const simNodes = ref([])
-const simLinks = ref([])
+// Simulation references and states (shallowRef avoids Vue Proxy overhead on hundreds of nodes)
+const simNodes = shallowRef([])
+const simLinks = shallowRef([])
 let simulation = null
 let zoomBehavior = null
+let tickRafId = null
+
+const LARGE_GRAPH_THRESHOLD = 120
+const isLargeGraph = computed(() => simNodes.value.length > LARGE_GRAPH_THRESHOLD)
 
 const tickCount = ref(0)
 const zoomTransform = ref({ x: 0, y: 0, k: 1 })
 const hoveredNodeId = ref(null)
+
+const nodeById = computed(() => {
+  const map = new Map()
+  for (const n of simNodes.value) {
+    map.set(n.id, n)
+  }
+  return map
+})
 
 // Connection Degree Map calculation (counts total edges connected to each node)
 const nodeDegreeMap = computed(() => {
@@ -258,7 +274,7 @@ function getNodeDegree(nodeId) {
  * - Se sizeByConnections è true: raggio proporzionale alla radice quadrata
  *   del numero di connessioni (area-proportional), variando da 16px (leaf) a 40px (hub).
  */
-function getNodeRadius(node) {
+function computeNodeRadius(node) {
   if (!node) return 22
   const baseUniform = 22 * props.scaleFactor
   if (!props.sizeByConnections) {
@@ -274,8 +290,25 @@ function getNodeRadius(node) {
   return Math.round(minR + ratio * (maxR - minR))
 }
 
+function getNodeRadius(node) {
+  if (!node) return 22
+  if (typeof node._radius === 'number') return node._radius
+  return computeNodeRadius(node)
+}
+
+function refreshNodeMetrics(nodes) {
+  for (const n of nodes) {
+    n._radius = computeNodeRadius(n)
+    n._labelHalfW = Math.max(n._radius + 18, calcTextWidth(n.label) / 2 + 16)
+  }
+}
+
 function getNodeColor(group) {
-  return getGroupColor(group)
+  return getGroupColor(group, props.data?.groups)
+}
+
+function getGroupDisplayName(group) {
+  return getGroupLabel(group, props.data?.groups)
 }
 
 function getNodeBorderColor() {
@@ -343,9 +376,20 @@ function getNodeInfoValue(node, key) {
   return null
 }
 
-function searchMatch(node) {
-  if (!props.searchQuery) return false
-  const q = props.searchQuery.toLowerCase().trim()
+const searchMatchedIds = computed(() => {
+  const set = new Set()
+  const q = props.searchQuery ? props.searchQuery.toLowerCase().trim() : ''
+  if (!q) return set
+  for (const node of simNodes.value) {
+    if (searchMatch(node, q)) {
+      set.add(node.id)
+    }
+  }
+  return set
+})
+
+function searchMatch(node, q = props.searchQuery ? props.searchQuery.toLowerCase().trim() : '') {
+  if (!q) return false
   const fields = [
     node.label,
     node.id,
@@ -378,7 +422,7 @@ function isNodeConnectedToActive(nodeId) {
 
 function isNodeDimmed(nodeId) {
   if (props.activeGroups.length > 0) {
-    const node = simNodes.value.find(n => n.id === nodeId)
+    const node = nodeById.value.get(nodeId)
     if (node && !props.activeGroups.includes(node.group)) return true
   }
   if (!activeNodeId.value) return false
@@ -393,8 +437,8 @@ function isLinkDimmed(link) {
   if (props.activeGroups.length > 0) {
     const sId = typeof link.source === 'object' ? link.source.id : link.source
     const tId = typeof link.target === 'object' ? link.target.id : link.target
-    const sNode = simNodes.value.find(n => n.id === sId)
-    const tNode = simNodes.value.find(n => n.id === tId)
+    const sNode = nodeById.value.get(sId)
+    const tNode = nodeById.value.get(tId)
     if ((sNode && !props.activeGroups.includes(sNode.group)) || (tNode && !props.activeGroups.includes(tNode.group))) {
       return true
     }
@@ -469,7 +513,7 @@ function isSubnetDimmed(group) {
     return !props.activeGroups.includes(group)
   }
   if (!activeNodeId.value) return false
-  const activeNode = simNodes.value.find(n => n.id === activeNodeId.value)
+  const activeNode = nodeById.value.get(activeNodeId.value)
   return activeNode ? activeNode.group !== group : false
 }
 
@@ -516,9 +560,10 @@ const subnetHulls = computed(() => {
     const labelX = sumX / nodes.length
     const labelY = minY - 6
     const subnetCidr = nodes.map(n => getNodeInfoValue(n, 'subnet')).find(Boolean)
-    const hullLabel = subnetCidr
-      ? `${group} · ${subnetCidr} (${nodes.length})`
-      : `${group} (${nodes.length})`
+    const displayName = getGroupDisplayName(group)
+    const hullLabel = subnetCidr && !displayName.includes(subnetCidr)
+      ? `${displayName} · ${subnetCidr} (${nodes.length})`
+      : `${displayName} (${nodes.length})`
 
     hulls.push({
       group,
@@ -632,43 +677,67 @@ function createClusterForce(anchors, strength = 0.14) {
 function createBoxCollisionForce(iterations = 4) {
   let nodes = []
   function force() {
+    if (nodes.length === 0) return
+
+    let maxHw = 0
+    let maxVert = 0
+    for (let i = 0; i < nodes.length; i++) {
+      const n = nodes[i]
+      const r = n._radius || 22
+      const hw = n._labelHalfW || Math.max(r + 18, calcTextWidth(n.label) / 2 + 16)
+      if (hw > maxHw) maxHw = hw
+      if (r + 48 > maxVert) maxVert = r + 48
+    }
+
     for (let iter = 0; iter < iterations; iter++) {
+      const qt = d3.quadtree(nodes, d => d.x, d => d.y)
+
       for (let i = 0; i < nodes.length; i++) {
         const a = nodes[i]
-        const rA = getNodeRadius(a)
-        const hwA = Math.max(rA + 18, calcTextWidth(a.label) / 2 + 16)
+        const rA = a._radius || 22
+        const hwA = a._labelHalfW || Math.max(rA + 18, calcTextWidth(a.label) / 2 + 16)
         const topA = rA + 14
         const botA = rA + 48
 
-        for (let j = i + 1; j < nodes.length; j++) {
-          const b = nodes[j]
-          const rB = getNodeRadius(b)
-          const diffGroupGap = a.group !== b.group ? 24 : 0
-          const hwB = Math.max(rB + 18, calcTextWidth(b.label) / 2 + 16) + diffGroupGap
-          const topB = rB + 14 + diffGroupGap
-          const botB = rB + 48 + diffGroupGap
+        const searchXMin = a.x - hwA - maxHw - 24
+        const searchXMax = a.x + hwA + maxHw + 24
+        const searchYMin = a.y - topA - maxVert - 24
+        const searchYMax = a.y + botA + maxVert + 24
 
-          const dx = b.x - a.x
-          const overlapX = hwA + hwB - Math.abs(dx)
-          if (overlapX <= 0) continue
+        qt.visit((quad, x0, y0, x1, y1) => {
+          if (!quad.length) {
+            let q = quad
+            do {
+              const b = q.data
+              if (b && b.index > a.index) {
+                const rB = b._radius || 22
+                const diffGroupGap = a.group !== b.group ? 24 : 0
+                const hwB = (b._labelHalfW || Math.max(rB + 18, calcTextWidth(b.label) / 2 + 16)) + diffGroupGap
+                const topB = rB + 14 + diffGroupGap
+                const botB = rB + 48 + diffGroupGap
 
-          // Asymmetric vertical bounds because labels sit below each node circle
-          const overlapY = dx >= 0
-            ? Math.min(a.y + botA - (b.y - topB), b.y + botB - (a.y - topA))
-            : Math.min(a.y + botA - (b.y - topB), b.y + botB - (a.y - topA))
-          if (overlapY <= 0) continue
-
-          if (overlapX < overlapY) {
-            const push = (overlapX / 2) * (dx >= 0 ? 1 : -1)
-            if (!a.pinned) a.x -= push
-            if (!b.pinned) b.x += push
-          } else {
-            const dy = b.y - a.y
-            const push = (overlapY / 2) * (dy >= 0 ? 1 : -1)
-            if (!a.pinned) a.y -= push
-            if (!b.pinned) b.y += push
+                const dx = b.x - a.x
+                const overlapX = hwA + hwB - Math.abs(dx)
+                if (overlapX > 0) {
+                  const overlapY = Math.min(a.y + botA - (b.y - topB), b.y + botB - (a.y - topA))
+                  if (overlapY > 0) {
+                    if (overlapX < overlapY) {
+                      const push = (overlapX / 2) * (dx >= 0 ? 1 : -1)
+                      if (!a.pinned) a.x -= push
+                      if (!b.pinned) b.x += push
+                    } else {
+                      const dy = b.y - a.y
+                      const push = (overlapY / 2) * (dy >= 0 ? 1 : -1)
+                      if (!a.pinned) a.y -= push
+                      if (!b.pinned) b.y += push
+                    }
+                  }
+                }
+              }
+            } while ((q = q.next))
           }
-        }
+          return x0 > searchXMax || x1 < searchXMin || y0 > searchYMax || y1 < searchYMin
+        })
       }
     }
   }
@@ -711,7 +780,8 @@ function createGroupSeparationForce(iterations = 2, gap = 24) {
 
       const list = Array.from(groups.values())
       for (const g of list) {
-        const labelHalfW = calcTextWidth(`${g.name} (${g.nodes.length})`) / 2 + 24
+        const displayName = getGroupDisplayName(g.name)
+        const labelHalfW = calcTextWidth(`${displayName} (${g.nodes.length})`) / 2 + 24
         const cx = g.sumX / g.nodes.length
         if (cx - labelHalfW < g.minX) g.minX = cx - labelHalfW
         if (cx + labelHalfW > g.maxX) g.maxX = cx + labelHalfW
@@ -782,7 +852,7 @@ function initSimulation() {
   // Track index within group for clean initial spiral placement
   const groupSeenCount = new Map()
 
-  simNodes.value = props.data.nodes.map(n => {
+  const nextNodes = props.data.nodes.map(n => {
     const prev = prevMap.get(n.id)
     const anchor = currentAnchors.get(n.group) || { x: centerX, y: centerY }
     const gIdx = groupSeenCount.get(n.group) || 0
@@ -802,36 +872,52 @@ function initSimulation() {
     }
   })
 
-  simLinks.value = props.data.links.map(l => ({ ...l }))
+  refreshNodeMetrics(nextNodes)
+  const nextLinks = props.data.links.map(l => ({ ...l }))
+
+  simNodes.value = nextNodes
+  simLinks.value = nextLinks
 
   if (simulation) {
     simulation.stop()
   }
+  if (tickRafId !== null) {
+    cancelAnimationFrame(tickRafId)
+    tickRafId = null
+  }
 
-  simulation = d3.forceSimulation(simNodes.value)
+  const large = nextNodes.length > LARGE_GRAPH_THRESHOLD
+  const collideIters = large ? 2 : 4
+  const initialTicks = nextNodes.length > 300 ? 120 : large ? 160 : 240
+
+  simulation = d3.forceSimulation(nextNodes)
     .force(
       'link',
-      d3.forceLink(simLinks.value)
+      d3.forceLink(nextLinks)
         .id(d => d.id)
         .distance(getLinkDistance)
         .strength(0.55)
     )
     .force('charge', d3.forceManyBody().strength(-900))
     .force('center', d3.forceCenter(centerX, centerY).strength(0.04))
-    .force('boxCollide', createBoxCollisionForce(4))
-    .force('groupSeparate', props.showSubnets ? createGroupSeparationForce(2, 24) : null)
+    .force('boxCollide', createBoxCollisionForce(collideIters))
+    .force('groupSeparate', props.showSubnets ? createGroupSeparationForce(large ? 1 : 2, 24) : null)
     .force('cluster', props.showSubnets ? createClusterForce(currentAnchors, 0.16) : null)
     .on('tick', () => {
-      tickCount.value++
+      if (tickRafId !== null) return
+      tickRafId = requestAnimationFrame(() => {
+        tickRafId = null
+        tickCount.value++
+      })
     })
 
   // Pre-settle initial outward sector layout synchronously, then release anchor/center pull
   // so nodes expand freely outward and never snap back to their initial positions
-  simulation.tick(240)
+  simulation.tick(initialTicks)
   simulation.force('cluster', null)
   simulation.force('center', null)
   simulation.force('link')?.strength(0.25)
-  simulation.alpha(0.05)
+  simulation.alpha(large ? 0.015 : 0.05)
   tickCount.value++
 
   if (!props.isSimulationRunning) {
@@ -846,7 +932,7 @@ function setupZoom() {
   if (!svgRef.value) return
 
   zoomBehavior = d3.zoom()
-    .scaleExtent([0.15, 4])
+    .scaleExtent([0.05, 4])
     .filter(event => {
       return !event.target.closest('.node-group') || event.type === 'wheel'
     })
@@ -977,7 +1063,7 @@ function fitGraph(animate = true) {
   const graphWidth = maxX - minX + padding * 2
   const graphHeight = maxY - minY + padding * 2
 
-  const scale = Math.min(Math.max(0.18, Math.min(width / graphWidth, height / graphHeight)), 1.35)
+  const scale = Math.min(Math.max(0.06, Math.min(width / graphWidth, height / graphHeight)), 1.35)
   const centerX = (minX + maxX) / 2
   const centerY = (minY + maxY) / 2
 
@@ -994,7 +1080,7 @@ function fitGraph(animate = true) {
 }
 
 function centerOnNode(nodeId) {
-  const node = simNodes.value.find(n => n.id === nodeId)
+  const node = nodeById.value.get(nodeId)
   if (!node || !svgRef.value || !zoomBehavior) return
 
   const container = containerRef.value
@@ -1014,7 +1100,7 @@ function centerOnNode(nodeId) {
 }
 
 function togglePinNode(nodeId) {
-  const node = simNodes.value.find(n => n.id === nodeId)
+  const node = nodeById.value.get(nodeId)
   if (!node) return
   node.pinned = !node.pinned
   if (node.pinned) {
@@ -1036,7 +1122,7 @@ function reheat() {
 watch(() => props.data, () => {
   initSimulation()
   setTimeout(fitGraph, 100)
-}, { deep: true })
+})
 
 watch(() => props.isSimulationRunning, (running) => {
   if (!simulation) return
@@ -1057,8 +1143,9 @@ watch(() => props.showSubnets, (enabled) => {
 
 // Update physics forces when sizing option changes
 watch(() => [props.sizeByConnections, props.scaleFactor], () => {
+  refreshNodeMetrics(simNodes.value)
   if (simulation) {
-    simulation.force('boxCollide', createBoxCollisionForce(4))
+    simulation.force('boxCollide', createBoxCollisionForce(isLargeGraph.value ? 2 : 4))
     simulation.force(
       'link',
       d3.forceLink(simLinks.value)
@@ -1101,6 +1188,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (simulation) simulation.stop()
+  if (tickRafId !== null) cancelAnimationFrame(tickRafId)
   if (resizeObserver) resizeObserver.disconnect()
   window.removeEventListener('pointermove', onPointerMove)
   window.removeEventListener('pointerup', onPointerUp)
@@ -1309,7 +1397,14 @@ defineExpose({
   fill: rgba(15, 23, 42, 0.85);
   stroke: rgba(148, 163, 184, 0.25);
   stroke-width: 1;
-  backdrop-filter: blur(4px);
+}
+
+.large-graph .node-group,
+.large-graph .link-group,
+.large-graph .subnet-group,
+.large-graph .link-line,
+.large-graph .node-circle {
+  transition: none !important;
 }
 
 .node-label-text {

@@ -23,6 +23,7 @@
         <label class="picker-label">Grafo:</label>
         <select v-model="selectedDataset" @change="onDatasetChange" class="dataset-select">
           <option value="/rete_interna.json">Rete Interna (rete_interna.json)</option>
+          <option value="/rete_vpn.json">Rete VPN (rete_vpn.json)</option>
           <option value="/graphData.json">Infrastruttura Web (data.json)</option>
         </select>
       </div>
@@ -100,7 +101,7 @@
           >
             <span class="group-pill-left">
               <span class="group-dot" :style="{ backgroundColor: getGroupColor(grp) }"></span>
-              <span class="group-name">{{ grp }}</span>
+              <span class="group-name">{{ getGroupDisplayName(grp) }}</span>
             </span>
             <span class="group-count">{{ getGroupCount(grp) }}</span>
           </button>
@@ -245,7 +246,7 @@
           <div class="drawer-header">
             <div class="drawer-title-group">
               <span class="drawer-badge" :style="{ backgroundColor: getGroupColor(selectedNode.group) }">
-                {{ selectedNode.group }}
+                {{ getGroupDisplayName(selectedNode.group) }}
               </span>
               <h2 class="drawer-title">{{ selectedNode.label }}</h2>
               <code class="drawer-id">id: {{ selectedNode.id }}</code>
@@ -372,9 +373,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, shallowRef, computed, onMounted } from 'vue'
 import NetworkGraph from './components/NetworkGraph.vue'
-import { getGroupColor } from './utils/groupColors'
+import { getGroupColor as resolveGroupColor, getGroupLabel } from './utils/groupColors'
 
 const FALLBACK_DATA = {
   nodes: [
@@ -394,7 +395,7 @@ const FALLBACK_DATA = {
 }
 
 const graphRef = ref(null)
-const graphData = ref({ nodes: [], links: [] })
+const graphData = shallowRef({ nodes: [], links: [] })
 const loading = ref(false)
 const errorMessage = ref(null)
 
@@ -407,17 +408,42 @@ const showSubnets = ref(true)
 const isPhysicsRunning = ref(true)
 const sizeByConnections = ref(true)
 
-const availableGroups = computed(() => {
-  if (!graphData.value.nodes) return []
-  const set = new Set()
-  graphData.value.nodes.forEach(n => {
-    if (n.group) set.add(n.group)
-  })
-  return Array.from(set)
+const nodeByIdMap = computed(() => {
+  const map = new Map()
+  if (graphData.value.nodes) {
+    for (const n of graphData.value.nodes) {
+      map.set(n.id, n)
+    }
+  }
+  return map
 })
 
+const groupCountsMap = computed(() => {
+  const map = new Map()
+  if (graphData.value.nodes) {
+    for (const n of graphData.value.nodes) {
+      if (n.group) {
+        map.set(n.group, (map.get(n.group) || 0) + 1)
+      }
+    }
+  }
+  return map
+})
+
+const availableGroups = computed(() => {
+  return Array.from(groupCountsMap.value.keys())
+})
+
+function getGroupColor(grp) {
+  return resolveGroupColor(grp, graphData.value?.groups)
+}
+
+function getGroupDisplayName(grp) {
+  return getGroupLabel(grp, graphData.value?.groups)
+}
+
 function getGroupCount(grp) {
-  return graphData.value.nodes?.filter(n => n.group === grp).length || 0
+  return groupCountsMap.value.get(grp) || 0
 }
 
 function toggleGroupFilter(grp) {
@@ -490,7 +516,7 @@ function getLinkIdStr(endpoint) {
 }
 
 function getNodeLabel(nodeId) {
-  const n = graphData.value.nodes?.find(item => item.id === nodeId)
+  const n = nodeByIdMap.value.get(nodeId)
   return n ? n.label : nodeId
 }
 
@@ -533,7 +559,7 @@ const EXCLUDED_SPEC_KEYS = new Set([
 const selectedNodeSpecs = computed(() => {
   const n = selectedNode.value
   if (!n) return []
-  const rawNode = graphData.value.nodes?.find(item => item.id === n.id) || n
+  const rawNode = nodeByIdMap.value.get(n.id) || n
 
   const entries = Object.entries(rawNode)
     .filter(([key, val]) => !EXCLUDED_SPEC_KEYS.has(key) && val !== undefined && val !== null)
@@ -581,7 +607,7 @@ function unlockAllNodes() {
 }
 
 function jumpToNode(nodeId) {
-  const n = graphData.value.nodes?.find(item => item.id === nodeId)
+  const n = nodeByIdMap.value.get(nodeId)
   if (n) {
     selectedNode.value = n
     graphRef.value?.centerOnNode(nodeId)

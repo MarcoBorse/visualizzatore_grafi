@@ -11,25 +11,38 @@ I dati sono caricati dinamicamente da:
 * `public/esempio.json` (file di esempio/template pronto all'uso)
 * È possibile aggiornare i file senza dover ricompilare l'applicazione, oppure caricare un qualsiasi file JSON personalizzato dall'interfaccia tramite il pulsante **"Carica JSON"**.
 
-### Formato JSON dei nodi
+### Formato JSON dei gruppi e dei nodi
+È possibile configurare nomi visualizzati e colori dei gruppi direttamente nel JSON tramite la sezione opzionale `groups` (ogni voce può essere un oggetto `{ "label": "...", "color": "#..." }` oppure solo una stringa colore es. `"#ef4444"`).
+
 Ogni nodo può includere, oltre ai campi base (`id`, `label`, `group`, `description`), un array `info` con coppie chiave/valore personalizzate (es. `ip`, `subnet`, `vlan`, `vlanTag`, `lan`, `ufficio`, `switch`, `porta`, `patch`, `cavo`):
 
 ```json
 {
-  "id": "nas",
-  "label": "QNAP Master",
-  "group": "Server 2",
-  "description": "Storage NAS principale.",
-  "info": [
-    { "ufficio": "Sala Server" },
-    { "switch": "sw64" },
-    { "porta": "2" },
-    { "cavo": "blu" },
-    { "vlan": "VLAN1" },
-    { "vlanTag": "13" },
-    { "subnet": "192.168.13.0/24" },
-    { "lan": "LAN2" }
-  ]
+  "groups": {
+    "Server 2": {
+      "label": "Server 2 (NAS)",
+      "color": "#6366f1"
+    }
+  },
+  "nodes": [
+    {
+      "id": "nas",
+      "label": "QNAP Master",
+      "group": "Server 2",
+      "description": "Storage NAS principale.",
+      "info": [
+        { "ufficio": "Sala Server" },
+        { "switch": "sw64" },
+        { "porta": "2" },
+        { "cavo": "blu" },
+        { "vlan": "VLAN1" },
+        { "vlanTag": "13" },
+        { "subnet": "192.168.13.0/24" },
+        { "lan": "LAN2" }
+      ]
+    }
+  ],
+  "links": []
 }
 ```
 

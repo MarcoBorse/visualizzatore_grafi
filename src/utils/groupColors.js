@@ -30,8 +30,28 @@ export const GROUP_COLORS = {
   security: '#f97316'
 }
 
-export function getGroupColor(group) {
+function findCustomGroupEntry(group, customGroups) {
+  if (!group || !customGroups || typeof customGroups !== 'object') return null
+  if (Object.prototype.hasOwnProperty.call(customGroups, group)) {
+    return customGroups[group]
+  }
+  const key = group.toLowerCase().trim()
+  for (const [k, v] of Object.entries(customGroups)) {
+    if (k.toLowerCase().trim() === key) return v
+  }
+  return null
+}
+
+export function getGroupColor(group, customGroups = null) {
   if (!group) return '#6366f1'
+  const custom = findCustomGroupEntry(group, customGroups)
+  if (typeof custom === 'string' && custom.trim()) {
+    return custom.trim()
+  }
+  if (custom && typeof custom === 'object' && typeof custom.color === 'string' && custom.color.trim()) {
+    return custom.color.trim()
+  }
+
   const key = group.toLowerCase().trim()
   if (GROUP_COLORS[key]) return GROUP_COLORS[key]
   let hash = 0
@@ -40,4 +60,13 @@ export function getGroupColor(group) {
   }
   const hue = Math.abs(hash % 360)
   return `hsl(${hue}, 70%, 55%)`
+}
+
+export function getGroupLabel(group, customGroups = null) {
+  if (!group) return ''
+  const custom = findCustomGroupEntry(group, customGroups)
+  if (custom && typeof custom === 'object' && typeof custom.label === 'string' && custom.label.trim()) {
+    return custom.label.trim()
+  }
+  return group
 }

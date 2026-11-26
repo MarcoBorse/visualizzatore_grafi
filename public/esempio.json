@@ -1,4 +1,18 @@
 {
+  "groups": {
+    "Management": {
+      "label": "Management (Core)",
+      "color": "#ef4444"
+    },
+    "Server": {
+      "label": "Server",
+      "color": "#8b5cf6"
+    },
+    "Uffici": {
+      "label": "Uffici",
+      "color": "#14b8a6"
+    }
+  },
   "nodes": [
     {
       "id": "router_core",

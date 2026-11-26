@@ -1,61 +1,219 @@
 {
+  "groups": {
+    "Management": {
+      "label": "Management (Core)",
+      "color": "#ef4444"
+    },
+    "Server": {
+      "label": "Server",
+      "color": "#8b5cf6"
+    },
+    "Uffici": {
+      "label": "Uffici",
+      "color": "#14b8a6"
+    }
+  },
   "nodes": [
     {
-      "id": "proxy",
-      "label": "Reverse Proxy",
-      "group": "infra",
-      "description": "Gestisce il traffico HTTPS e il routing verso i servizi interni."
+      "id": "router_core",
+      "label": "Router Core",
+      "group": "Management",
+      "description": "Router L3 principale di esempio.",
+      "info": [
+        {
+          "ip": "172.16.1.1"
+        },
+        {
+          "subnet": "172.16.1.0/24"
+        },
+        {
+          "vlan": "VLAN1"
+        },
+        {
+          "vlanTag": "UNTAGGED"
+        },
+        {
+          "ufficio": "Sala Server"
+        }
+      ]
     },
     {
-      "id": "api",
-      "label": "Core API",
-      "group": "backend",
-      "description": "Servizio principale REST/JSON."
+      "id": "sw_main",
+      "label": "Switch Principale",
+      "group": "Management",
+      "description": "Switch di distribuzione a 24 porte.",
+      "info": [
+        {
+          "ip": "172.16.1.2"
+        },
+        {
+          "subnet": "172.16.1.0/24"
+        },
+        {
+          "vlan": "VLAN1"
+        },
+        {
+          "porta": "24 (Uplink)"
+        },
+        {
+          "ufficio": "Sala Server"
+        }
+      ]
     },
     {
-      "id": "worker",
-      "label": "Worker",
-      "group": "backend",
-      "description": "Elabora task asincroni in background."
+      "id": "srv_app",
+      "label": "Server Applicativo",
+      "group": "Server",
+      "description": "Server applicativo interno.",
+      "info": [
+        {
+          "ip": "192.168.10.10"
+        },
+        {
+          "subnet": "192.168.10.0/24"
+        },
+        {
+          "vlan": "VLAN10"
+        },
+        {
+          "vlanTag": "10"
+        },
+        {
+          "switch": "sw_main"
+        },
+        {
+          "porta": "2"
+        },
+        {
+          "cavo": "blu"
+        }
+      ]
     },
     {
-      "id": "db",
-      "label": "Database",
-      "group": "infra",
-      "description": "Archivio relazionale persistente."
+      "id": "srv_nas",
+      "label": "Storage NAS",
+      "group": "Server",
+      "description": "Archivio di rete condiviso.",
+      "info": [
+        {
+          "ip": "192.168.10.20"
+        },
+        {
+          "subnet": "192.168.10.0/24"
+        },
+        {
+          "vlan": "VLAN10"
+        },
+        {
+          "vlanTag": "10"
+        },
+        {
+          "switch": "sw_main"
+        },
+        {
+          "porta": "3"
+        },
+        {
+          "cavo": "blu"
+        }
+      ]
     },
     {
-      "id": "docs",
-      "label": "Documentazione",
-      "group": "docs",
-      "description": "Specifiche tecniche e runbook operativi."
+      "id": "pc_ufficio_1",
+      "label": "PC Ufficio 1",
+      "group": "Uffici",
+      "description": "Postazione di lavoro 1.",
+      "info": [
+        {
+          "ip": "10.0.20.11"
+        },
+        {
+          "subnet": "10.0.20.0/24"
+        },
+        {
+          "vlan": "VLAN20"
+        },
+        {
+          "vlanTag": "20"
+        },
+        {
+          "ufficio": "Ufficio 1"
+        },
+        {
+          "switch": "sw_main"
+        },
+        {
+          "porta": "11"
+        },
+        {
+          "patch": "1"
+        },
+        {
+          "cavo": "rosso"
+        }
+      ]
+    },
+    {
+      "id": "pc_ufficio_2",
+      "label": "PC Ufficio 2",
+      "group": "Uffici",
+      "description": "Postazione di lavoro 2.",
+      "info": [
+        {
+          "ip": "10.0.20.12"
+        },
+        {
+          "subnet": "10.0.20.0/24"
+        },
+        {
+          "vlan": "VLAN20"
+        },
+        {
+          "vlanTag": "20"
+        },
+        {
+          "ufficio": "Ufficio 2"
+        },
+        {
+          "switch": "sw_main"
+        },
+        {
+          "porta": "12"
+        },
+        {
+          "patch": "2"
+        },
+        {
+          "cavo": "rosso"
+        }
+      ]
     }
   ],
   "links": [
     {
-      "source": "proxy",
-      "target": "api",
-      "relation": "HTTPS"
+      "source": "sw_main",
+      "target": "router_core",
+      "relation": "uplink p24"
     },
     {
-      "source": "api",
-      "target": "db",
-      "relation": "SQL"
+      "source": "srv_app",
+      "target": "sw_main",
+      "relation": "p2 · 192.168.10.0/24"
     },
     {
-      "source": "api",
-      "target": "worker",
-      "relation": "Queue"
+      "source": "srv_nas",
+      "target": "sw_main",
+      "relation": "p3 · 192.168.10.0/24"
     },
     {
-      "source": "worker",
-      "target": "db",
-      "relation": "Write"
+      "source": "pc_ufficio_1",
+      "target": "sw_main",
+      "relation": "p11 · 10.0.20.0/24"
     },
     {
-      "source": "docs",
-      "target": "api",
-      "relation": "Documenta"
+      "source": "pc_ufficio_2",
+      "target": "sw_main",
+      "relation": "p12 · 10.0.20.0/24"
     }
   ]
 }

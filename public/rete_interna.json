@@ -1,4 +1,66 @@
 {
+    "groups": {
+        "varco1": {
+            "label": "Varco 1",
+            "color": "#f97316"
+        },
+        "Fornitura Internet": {
+            "label": "Fornitura Internet",
+            "color": "#3b82f6"
+        },
+        "Management": {
+            "label": "Management",
+            "color": "#ef4444"
+        },
+        "Server 1": {
+            "label": "Server 1",
+            "color": "#8b5cf6"
+        },
+        "Server 2": {
+            "label": "Server 2",
+            "color": "#6366f1"
+        },
+        "Server 3": {
+            "label": "Server 3",
+            "color": "#a855f7"
+        },
+        "TLC": {
+            "label": "TLC",
+            "color": "#84cc16"
+        },
+        "Stampante": {
+            "label": "Stampante",
+            "color": "#22c55e"
+        },
+        "Centralino": {
+            "label": "Centralino",
+            "color": "#ec4899"
+        },
+        "Wifi Guest": {
+            "label": "Wifi Guest",
+            "color": "#06b6d4"
+        },
+        "Amministrazione": {
+            "label": "Amministrazione",
+            "color": "#fb923c"
+        },
+        "Tecnico 1": {
+            "label": "Tecnico 1",
+            "color": "#f59e0b"
+        },
+        "Tecnico 2": {
+            "label": "Tecnico 2",
+            "color": "#14b8a6"
+        },
+        "Tecnico 3": {
+            "label": "Tecnico 3",
+            "color": "#38bdf8"
+        },
+        "Conferenza": {
+            "label": "Conferenza",
+            "color": "#e879f9"
+        }
+    },
     "nodes": [
         {
             "id": "INTERNET",
